@@ -1,7 +1,16 @@
 import Link from "next/link";
 import styles from "../styles/SignIn.module.css";
-import { Auth, signIn, useAuth } from "@/utils/firebase";
-export default function SignIn() {
+import {
+  Auth,
+  auth,
+  emailVerification,
+  signUp,
+  useAuth,
+} from "@/utils/firebase";
+import { sendEmailVerification, signOut } from "firebase/auth";
+import { getWebsite } from "@/utils";
+
+export default function SignUp() {
   const router = useAuth(Auth.SIGNED_OUT);
   function handleSubmit(e) {
     e.preventDefault();
@@ -11,22 +20,23 @@ export default function SignIn() {
       alert("Only student email is allowed!");
     }
     (async () => {
-      const user = await signIn(email, password).catch((error) => {
-        const errorCode = error.code;
-        if (errorCode == "auth/wrong-password") {
-          alert("Wrong password!");
-        } else if (errorCode == "auth/user-not-found") {
-          alert("No user found with this email!");
+      const user = await signUp(email, password).catch((e) => {
+        const errorCode = e.code;
+        if (errorCode == "auth/email-already-in-use") {
+          alert("This email is already in use, try signing up instead!");
         } else if (errorCode == "auth/invalid-email") {
           alert("This email is invalid!");
+        } else if (errorCode == "auth/weak-password") {
+          alert("Your password is too weak! Try a stronger password!");
         } else {
           alert("Some error occurred, contact the developers");
         }
+        signOut(auth);
       });
+
       if (user && !user.user.emailVerified) {
+        emailVerification();
         router.push("/verifyEmail");
-      } else if (user) {
-        router.push("/");
       }
     })();
   }
@@ -37,9 +47,9 @@ export default function SignIn() {
       </h1>
       <div className={styles.box}>
         <br></br>
-        <h1 style={{ textAlign: "center" }}>Sign In</h1>
+        <h1 style={{ textAlign: "center" }}>Sign Up</h1>
         <br></br>
-        <form onSubmit={handleSubmit}>
+        <form id="signUp" onSubmit={handleSubmit}>
           <div style={{ marginLeft: "5%", display: "grid" }}>
             <label htmlFor="mailId">
               <h2>College Mail Id</h2>
@@ -48,20 +58,20 @@ export default function SignIn() {
               className={styles.input}
               type="email"
               placeholder="Enter Mail Id"
-              name="mailId"
+              name="ebay-mailId"
               required
             ></input>
             <label htmlFor="password">
-              <h2>Password </h2>
+              <h2>Password</h2>
             </label>
             <input
               className={styles.input}
               type="password"
               placeholder="Enter Password"
-              name="password"
+              name="ebay-password"
               required
             ></input>
-            <button className={styles.button}>Sign In</button>
+            <button className={styles.button}>Sign Up</button>
             <Link href="/" style={{ textAlign: "center" }}>
               Go Back
             </Link>
