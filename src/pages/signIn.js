@@ -1,6 +1,6 @@
 import Link from "next/link";
 import styles from "../styles/SignIn.module.css";
-import { Auth, signIn, useAuth } from "@/utils/firebase";
+import { Auth, signIn, useAuth } from "@/utils/authentication";
 export default function SignIn() {
   const router = useAuth(Auth.SIGNED_OUT);
   function handleSubmit(e) {

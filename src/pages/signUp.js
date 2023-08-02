@@ -6,7 +6,7 @@ import {
   emailVerification,
   signUp,
   useAuth,
-} from "@/utils/firebase";
+} from "@/utils/authentication";
 import { sendEmailVerification, signOut } from "firebase/auth";
 import { getWebsite } from "@/utils";
 

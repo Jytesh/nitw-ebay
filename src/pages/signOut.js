@@ -1,4 +1,4 @@
-import { Auth, useAuth } from "@/utils/firebase";
+import { Auth, useAuth } from "@/utils/authentication";
 
 export default function Home() {
   useAuth(Auth.SIGN_OUT);

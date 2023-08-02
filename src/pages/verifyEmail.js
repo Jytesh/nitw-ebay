@@ -1,4 +1,4 @@
-import { Auth, emailVerification, useAuth } from "@/utils/firebase";
+import { Auth, emailVerification, useAuth } from "@/utils/authentication";
 
 export default function VerifyEmail() {
   useAuth(Auth.SIGNED_IN);
