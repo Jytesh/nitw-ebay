@@ -1,5 +1,4 @@
 import Link from "next/link";
-import styles from "../styles/SignIn.module.css";
 import {
   Auth,
   auth,
@@ -7,12 +6,22 @@ import {
   signUp,
   useAuth,
 } from "@/utils/authentication";
-import { sendEmailVerification, signOut } from "firebase/auth";
-import { getWebsite } from "@/utils";
+
+import {
+  TextInput,
+  PasswordInput,
+  Anchor,
+  Paper,
+  Title,
+  Container,
+  Group,
+  Button,
+} from "@mantine/core";
 
 export default function SignUp() {
   const router = useAuth(Auth.SIGNED_OUT);
   function handleSubmit(e) {
+    console.log("Click");
     e.preventDefault();
     const email = document.querySelector("input[type=email]").value;
     const password = document.querySelector("input[type=password]").value;
@@ -23,7 +32,7 @@ export default function SignUp() {
       const user = await signUp(email, password).catch((e) => {
         const errorCode = e.code;
         if (errorCode == "auth/email-already-in-use") {
-          alert("This email is already in use, try signing up instead!");
+          alert("This email is already in use, try signing in instead!");
         } else if (errorCode == "auth/invalid-email") {
           alert("This email is invalid!");
         } else if (errorCode == "auth/weak-password") {
@@ -41,49 +50,40 @@ export default function SignUp() {
     })();
   }
   return (
-    <div>
-      <h1 style={{ textAlign: "center", margin: "5%", fontSize: "300%" }}>
-        NITW-EBAY
-      </h1>
-      <div className={styles.box}>
-        <br></br>
-        <h1 style={{ textAlign: "center" }}>Sign Up</h1>
-        <br></br>
+    <Container size={420} my={40}>
+      <Title align="center" sx={(theme) => ({ fontWeight: 900 })}>
+        NITW Hostel
+      </Title>
+
+      <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+        <Title align="center">Sign Up</Title>
+
         <form id="signUp" onSubmit={handleSubmit}>
-          <div style={{ marginLeft: "5%", display: "grid" }}>
-            <label htmlFor="mailId">
-              <h2>College Mail Id</h2>
-            </label>
-            <input
-              className={styles.input}
-              type="email"
-              placeholder="Enter Mail Id"
-              name="ebay-mailId"
-              required
-            ></input>
-            <label htmlFor="password">
-              <h2>Password</h2>
-            </label>
-            <input
-              className={styles.input}
-              type="password"
-              placeholder="Enter Password"
-              name="ebay-password"
-              required
-            ></input>
-            <button className={styles.button}>Sign Up</button>
-            <Link href="/" style={{ textAlign: "center" }}>
-              Go Back
-            </Link>
-            <Link href="/forgotPassword" style={{ textAlign: "center" }}>
+          <TextInput
+            type="email"
+            label="Email"
+            placeholder="you@student.nitw.ac.in"
+            required
+          />
+          <PasswordInput
+            label="Password"
+            placeholder="Your password"
+            required
+            mt="md"
+          />
+          <Button fullWidth mt="xl" type="submit">
+            Sign Up
+          </Button>
+          <Group position="apart" mt="lg">
+            <Anchor component={Link} size="sm" href="/forgotPassword">
               Forgot Password?
-            </Link>
-            <Link href="/signUp" style={{ textAlign: "center" }}>
-              Dont have an account?
-            </Link>
-          </div>
+            </Anchor>
+            <Anchor component={Link} size="sm" href="/signIn">
+              Already have an account?
+            </Anchor>
+          </Group>
         </form>
-      </div>
-    </div>
+      </Paper>
+    </Container>
   );
 }

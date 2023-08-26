@@ -91,13 +91,19 @@ export function useAuth(type) {
       case Auth.SIGN_OUT: {
         // Not signed in
         if (auth.currentUser !== null) {
-          signOut(auth);
+          auth.signOut().then(() => {
+            localStorage.removeItem("user");
+            console.log(localStorage);
+            router.push("/signIn");
+          });
+        } else {
+          router.push("/signIn");
         }
-        router.push("/signIn");
         break;
       }
 
       case Auth.SIGNED_OUT: {
+        console.log(auth.currentUser);
         if (auth.currentUser != null) {
           router.push("/");
         }
